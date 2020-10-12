@@ -6,8 +6,16 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paul-schaaf/solana-metamask-poc.git"
+  },
   "author": "",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/paul-schaaf/solana-metamask-poc/issues"
+  },
+  "homepage": "https://github.com/paul-schaaf/solana-metamask-poc#readme",
   "web3Wallet": {
     "bundle": {
       "local": "dist/bundle.js",
