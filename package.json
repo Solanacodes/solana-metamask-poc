@@ -22,7 +22,15 @@
       "url": "http://localhost:8081/dist/bundle.js"
     },
     "initialPermissions": {
-      "confirm": {}
+      "confirm": {},
+      "getPluginState": {},
+      "updatePluginState": {}
     }
+  },
+  "dependencies": {
+    "@solana/web3.js": "^0.80.2",
+    "bip32": "^2.0.6",
+    "bip39": "^3.0.2",
+    "tweetnacl": "^1.0.3"
   }
 }

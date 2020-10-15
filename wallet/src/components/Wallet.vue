@@ -1,6 +1,6 @@
 <template>
 <div id="wallet-container">
-  <div id="balance">Balance: {{balance || '--'}}</div>
+  <div id="balance">Balance: {{balance ?? '--'}}</div>
   <div v-if="state === states.WAITING_TO_CONNECT" id="connect-button" @click="connect">Connect</div>
   <div v-else id="send-container">
     <div id="recipient-address">Recipient Address</div>
@@ -16,6 +16,8 @@
 
 <script>
 import {ref} from 'vue';
+import {PublicKey, Connection, clusterApiUrl} from "@solana/web3.js";
+
 export default {
   name: 'Wallet',
   props: {
@@ -25,6 +27,7 @@ export default {
     const snapId = new URL('package.json', "http://localhost:8081/").toString()
     //eslint-disable-next-line no-undef
     const metamask = ethereum;
+    const balance = ref(null);
 
     const states = {
       WAITING_TO_CONNECT: "WAITING_TO_CONNECT",
@@ -40,6 +43,25 @@ export default {
         }]
       })
 
+      let pubKey = await metamask.send({
+          method: 'wallet_invokePlugin',
+          params: [snapId, {
+            method: 'getSolanaPubKey',
+          }]
+        });
+      
+      if (!pubKey) {
+        pubKey = await metamask.send({
+          method: 'wallet_invokePlugin',
+          params: [snapId, {
+            method: 'createSolanaAccount',
+          }]
+        });
+      }
+
+      const connection = new Connection(clusterApiUrl('testnet'), 'single');
+      balance.value = await connection.getBalance(new PublicKey(pubKey), 'single');
+
       state.value = states.CONNECTED;
     }
 
@@ -48,20 +70,18 @@ export default {
 
     const send = async () => {
       try {
-        await metamask.send({
+        const res = await metamask.send({
           method: 'wallet_invokePlugin',
           params: [snapId, {
-            method: 'confirm'
+            method: 'getSolanaPubKey',
           }]
         });
+        console.log(res);
       } catch (err) {
         console.error(err)
         alert('Problem happened: ' + err.message || err)
       }
     }
-    
-    const balance = ref(0);
-
 
     return {connect, send, states, state, balance, recipientAddress, amount};
   }
