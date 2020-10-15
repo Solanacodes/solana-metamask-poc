@@ -1,9 +1,9 @@
 wallet.registerRpcMessageHandler(async (originString, requestObject) => {
   switch (requestObject.method) {
-    case 'hello':
+    case 'confirm':
       return wallet.send({
-        method: 'alert',
-        params: [`Hello, ${originString}!`]
+        method: 'confirm',
+        params: [`Please confirm!`]
       })
     default:
       throw new Error('Method not found.')

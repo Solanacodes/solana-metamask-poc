@@ -11,7 +11,7 @@
     "url": "git+https://github.com/paul-schaaf/solana-metamask-poc.git"
   },
   "author": "",
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/paul-schaaf/solana-metamask-poc/issues"
   },
@@ -22,7 +22,7 @@
       "url": "http://localhost:8081/dist/bundle.js"
     },
     "initialPermissions": {
-      "alert": {}
+      "confirm": {}
     }
   }
 }

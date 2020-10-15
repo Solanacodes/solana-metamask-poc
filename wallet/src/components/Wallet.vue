@@ -5,12 +5,12 @@
   <div v-else id="send-container">
     <div id="recipient-address">Recipient Address</div>
     <div id="amount-to-send">Amount</div>
-    <input id="address-input" type="text"/>
-    <input id="amount-input" type="text"/>
+    <input id="address-input" type="text" v-model="recipientAddress"/>
+    <input id="amount-input" type="number" v-model="amount"/>
     <input id="send-button" type="submit" value="Send"/>
   </div>
   
-  <div @click="send">hello</div>
+  <div @click="send">Send Alert</div>
 </div>
 </template>
 
@@ -22,9 +22,7 @@ export default {
     msg: String
   },
   setup() {
-    const origin = new URL('package.json', "http://localhost:8081/").toString()
-    const snapId = `wallet_plugin_${origin}`
-
+    const snapId = new URL('package.json', "http://localhost:8081/").toString()
     //eslint-disable-next-line no-undef
     const metamask = ethereum;
 
@@ -34,26 +32,28 @@ export default {
     };
 
     const state = ref(states.WAITING_TO_CONNECT);
-
-    const connect = async () => {
-      /* await metamask.send({
-        method: 'wallet_requestPermissions',
+      const connect = async () => {
+      await metamask.send({
+        method: 'wallet_enable',
         params: [{
-          [snapId]: {}
+          wallet_plugin: { [snapId]: {} },
         }]
-      }); */
+      })
 
       state.value = states.CONNECTED;
     }
 
+    const recipientAddress = ref("");
+    const amount = ref(0);
+
     const send = async () => {
       try {
         await metamask.send({
-          method: snapId,
-          params: [{
-            method: 'hello'
+          method: 'wallet_invokePlugin',
+          params: [snapId, {
+            method: 'confirm'
           }]
-        })
+        });
       } catch (err) {
         console.error(err)
         alert('Problem happened: ' + err.message || err)
@@ -62,7 +62,8 @@ export default {
     
     const balance = ref(0);
 
-    return {connect, send, states, state, balance};
+
+    return {connect, send, states, state, balance, recipientAddress, amount};
   }
 }
 </script>
@@ -181,4 +182,17 @@ export default {
     top: -50%;
     left: 55%;
   }
+
+
+  /* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
 </style>
