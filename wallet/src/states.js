@@ -1,0 +1,4 @@
+export default {
+  WAITING_TO_CONNECT: "WAITING_TO_CONNECT",
+  CONNECTED: "CONNECTED"
+};
