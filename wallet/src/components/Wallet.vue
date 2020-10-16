@@ -34,7 +34,13 @@ export default {
     const balance = ref(null);
     const state = ref(states.WAITING_TO_CONNECT);
     const connect = async () => {
-      balance.value = await connectToMetamask();
+      try {
+        balance.value = await connectToMetamask();
+      } catch (err) {
+        console.error(err);
+        alert("Problem happened: " + err.message || err);
+        return;
+      }
       state.value = states.CONNECTED;
     };
 
